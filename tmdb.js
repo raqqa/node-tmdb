@@ -169,7 +169,7 @@ this.Collection = {
     }
 };
 
-this.fetchexternal = function(url,callback) {
+exports.fetchexternal = function(url,callback) {
     request(
         {
             uri:encodeURI(url.url),
