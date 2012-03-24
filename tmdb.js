@@ -9,10 +9,9 @@ String.prototype.format = function() {
     return content;
 };
 
-var urlprefix = 'http://api.themoviedb.org/3';
-
 var api_urls =
     {
+        base:'http://api.themoviedb.org/3',
         configuration: '{0}/configuration?api_key={1}',
         misc_latest: '{0}/latest/movie?api_key={1}',
         misc_now_playing: '{0}/movie/now-playing?api_key={1}&page={2}',
@@ -53,22 +52,22 @@ this.config;
  **/
 this.Misc = {
     latest: function(callback) {
-        var url = api_urls['misc_latest'].format(urlprefix, exports.apikey);
+        var url = api_urls['misc_latest'].format(api_urls['base'], exports.apikey);
         exports.fetchexternal({url: url}, callback);
     },
     now_playing: function(p, callback) {
         var page = ((typeof p !== "number") ? page = 1 : page = p);
-        var url = api_urls['misc_now_playing'].format(urlprefix, exports.apikey, page);
+        var url = api_urls['misc_now_playing'].format(api_urls['base'], exports.apikey, page);
         exports.fetchexternal({url: url}, callback);
     },
     popular: function(p, callback) {
         var page = ((typeof p !== "number") ? page = 1 : page = p);
-        var url = api_urls['misc_popular'].format(urlprefix, exports.apikey, page);
+        var url = api_urls['misc_popular'].format(api_urls['base'], exports.apikey, page);
         exports.fetchexternal({url: url}, callback);
     },
     top_rated: function(p, callback) {
         var page = ((typeof p !== "number") ? page = 1 : page = p);
-        var url = api_urls['misc_top_rated'].format(urlprefix, exports.apikey, page);
+        var url = api_urls['misc_top_rated'].format(api_urls['base'], exports.apikey, page);
         exports.fetchexternal({url: url}, callback);
     }
 };
@@ -78,7 +77,7 @@ this.Misc = {
  **/
 this.Configuration =
     function(callback) {
-        var url = api_urls['configuration'].format(urlprefix, exports.apikey);
+        var url = api_urls['configuration'].format(api_urls['base'], exports.apikey);
         exports.fetchexternal({url: url}, callback);
     };
 
@@ -88,35 +87,35 @@ this.Configuration =
  **/
 this.Movie = {
     info: function(q, callback) {
-        var url = api_urls['movie_info'].format(urlprefix, q, exports.apikey);
+        var url = api_urls['movie_info'].format(api_urls['base'], q, exports.apikey);
         exports.fetchexternal({url:url}, callback);
     },
     alternative_titles: function(q, callback) {
-        var url = api_urls['movie_alternative_titles'].format(urlprefix, q, exports.apikey);
+        var url = api_urls['movie_alternative_titles'].format(api_urls['base'], q, exports.apikey);
         exports.fetchexternal({url:url}, callback);
     },
     casts: function(q, callback) {
-        var url = api_urls['movie_casts'].format(urlprefix, q, exports.apikey);
+        var url = api_urls['movie_casts'].format(api_urls['base'], q, exports.apikey);
         exports.fetchexternal({url:url}, callback);
     },
     images: function(q, callback) {
-        var url = api_urls['movie_images'].format(urlprefix, q, exports.apikey);
+        var url = api_urls['movie_images'].format(api_urls['base'], q, exports.apikey);
         exports.fetchexternal({url:url}, callback);
     },
     keywords: function(q, callback) {
-        var url = api_urls['movie_keywords'].format(urlprefix, q, exports.apikey);
+        var url = api_urls['movie_keywords'].format(api_urls['base'], q, exports.apikey);
         exports.fetchexternal({url:url}, callback);
     },
     releases: function(q, callback) {
-        var url = api_urls['movie_releases'].format(urlprefix, q, exports.apikey);
+        var url = api_urls['movie_releases'].format(api_urls['base'], q, exports.apikey);
         exports.fetchexternal({url:url}, callback);
     },
     trailers: function(q, callback) {
-        var url = api_urls['movie_trailers'].format(urlprefix, q, exports.apikey);
+        var url = api_urls['movie_trailers'].format(api_urls['base'], q, exports.apikey);
         exports.fetchexternal({url:url}, callback);
     },
     translations: function(q, callback) {
-        var url = api_urls['movie_translations'].format(urlprefix, q, exports.apikey);
+        var url = api_urls['movie_translations'].format(api_urls['base'], q, exports.apikey);
         exports.fetchexternal({url:url}, callback);
     },
 };
@@ -129,12 +128,13 @@ this.Movie = {
 this.Search = {
     movie: function(q, callback) {
         var page = ((typeof q.page !== "number") ? page = 1 : page = q.page);
-        var url = api_urls['search_movie'].format(urlprefix, q.query, exports.apikey, page);
+        var url = api_urls['search_movie'].format(api_urls['base'], q.query, exports.apikey, page);
+        console.log(url);
         exports.fetchexternal({url:url}, callback);
     },
     person: function(q, callback) {
         var page = ((typeof q.page !== "number") ? page = 1 : page = q.page);
-        var url = api_urls['search_person'].format(urlprefix, q.query, exports.apikey, page);
+        var url = api_urls['search_person'].format(api_urls['base'], q.query, exports.apikey, page);
         exports.fetchexternal({url:url}, callback);
     }
 };
@@ -145,15 +145,15 @@ this.Search = {
  **/
 this.Person = {
     info: function(q, callback) {
-        var url = api_urls['person_info'].format(urlprefix, q, exports.apikey);
+        var url = api_urls['person_info'].format(api_urls['base'], q, exports.apikey);
         exports.fetchexternal({url:url}, callback);
     },
     credits: function(q, callback) {
-        var url = api_urls['person_credits'].format(urlprefix, q, exports.apikey);
+        var url = api_urls['person_credits'].format(api_urls['base'], q, exports.apikey);
         exports.fetchexternal({url:url}, callback);       
     },
     images: function(q, callback) {
-        var url = api_urls['person_images'].format(urlprefix, q, exports.apikey);
+        var url = api_urls['person_images'].format(api_urls['base'], q, exports.apikey);
         exports.fetchexternal({url:url}, callback);       
     }
 };
@@ -164,16 +164,21 @@ this.Person = {
  **/
 this.Collection = {
     info: function(q, callback) {
-        var url = api_urls['collection_info'].format(urlprefix, q, exports.apikey);
+        var url = api_urls['collection_info'].format(api_urls['base'], q, exports.apikey);
         exports.fetchexternal({url: url}, callback);
     }
 };
 
 this.fetchexternal = function(url,callback) {
-    console.log('Looking up url: '+url.url+'.');
-    request({uri:encodeURI(url.url), headers:{"Accept": 'application/json'}}, function(error,response,body) {
-        exports.handle(url,error,response,body,callback);
-    });
+    request(
+        {
+            uri:encodeURI(url.url),
+            headers: {"Accept": 'application/json'}
+        },
+        function(err,res,body) {
+            exports.handle(url,err,res,body,callback);
+        }
+    );
 }
 
 exports.handle = function(url, error, response, body, callback) {
