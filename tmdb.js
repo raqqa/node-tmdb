@@ -1,7 +1,38 @@
 var request = require('request');
-var util = require('./util');
+String.prototype.format = function() {
+    var content = this;
+    for (var i=0; i < arguments.length; i++)
+    {
+        var replacement = '{' + i + '}';
+        content = content.replace(replacement, arguments[i]);  
+    }
+    return content;
+};
 
 var urlprefix = 'http://api.themoviedb.org/3';
+
+var api_urls =
+    {
+        configuration: '{0}/configuration?api_key={1}',
+        misc_latest: '{0}/latest/movie?api_key={1}',
+        misc_now_playing: '{0}/movie/now-playing?api_key={1}&page={2}',
+        misc_popular: '{0}/movie/popular?api_key={1}&page={2}',
+        misc_top_rated: '{0}/movie/top-rated?api_key={1}&page={2}',
+        movie_info: '{0}/movie/{1}?api_key={2}',
+        movie_alternative_titles: '{0}/alternative_titles?api_key={2}',
+        movie_casts: '{0}/movie/{1}/casts?api_key={2}',
+        movie_images: '{0}/movie/{1}/images?api_key={2}',
+        movie_keywords: '{0}/movie/{1}/keywords?api_key={2}',
+        movie_releases: '{0}/movie/{1}/releases?api_key={2}',
+        movie_trailers: '{0}/movie/{1}/trailers?api_key={2}',
+        movie_translations: '{0}/movie/{1}/translations?api_key={2}',
+        person_info: '{0}/person/{1}?api_key={2}',
+        person_credits: '{0}/person/{1}/credits?api_key={2}',
+        person_images: '{0}/person/{1}/images?api_key={2}',
+        collection_info: '{0}/collection/{1}?api_key={2}',
+        search_movie: '{0}/search/movie?query={1}&api_key={2}&page={3}',
+        search_person: '{0}/search/person?query={1}&api_key={2}&page={3}'
+    };
 
 this.init = function(apikey) {
     this.apikey = apikey;
@@ -17,59 +48,28 @@ this.apikey;
 this.config;
 
 /**
- * constructs the search and info queries
- **/
-var buildUrl = function(query,opts) {
-    console.log(exports.config);
-    page = opts.page || 1;
-    if(opts.details) {
-        details = '/'+opts.details;
-    } else {
-        details = ''
-    }
-
-    if (opts.type == 'search') {
-        var url = urlprefix+'/'+opts.type+'/'+opts.details+'?query='+encodeURIComponent(query.query)+'&page='+page+'&api_key='+exports.apikey;
-    } else {
-        var url = urlprefix+'/'+opts.type+'/'+encodeURIComponent(query.query)+details+'?api_key='+exports.apikey;
-    }
-    return { url: url };
-}
-
-// "static" queries
-var simpleUrl = function(opts) {
-    page = opts.page || 1;
-    if (opts.type == 'configuration') {
-        var url = urlprefix+'/'+opts.type+'?api_key='+exports.apikey;
-        return { url: url };
-    }
-    var url = urlprefix+'/'+opts.type+'/'+opts.query+'?api_key='+exports.apikey+'&page='+page;
-    return { url: url };
-}
-
-/**
  * misc. functions
  * all but the 'latest'-function has to be supplied with a page argument (can be null)
  **/
 this.Misc = {
     latest: function(callback) {
-        opts = {type: 'latest', query: 'movie'};
-        exports.fetchexternal(simpleUrl(opts), callback);
+        var url = api_urls['misc_latest'].format(urlprefix, exports.apikey);
+        exports.fetchexternal({url: url}, callback);
     },
     now_playing: function(p, callback) {
-        opts = {type: 'movie', query: 'now-playing'};
-        opts["page"] = p || 1;
-        exports.fetchexternal(simpleUrl(opts), callback);
+        var page = ((typeof p !== "number") ? page = 1 : page = p);
+        var url = api_urls['misc_now_playing'].format(urlprefix, exports.apikey, page);
+        exports.fetchexternal({url: url}, callback);
     },
     popular: function(p, callback) {
-        opts = {type: 'movie', query: 'popular'};
-        opts["page"] = p || 1;
-        exports.fetchexternal(simpleUrl(opts), callback);
+        var page = ((typeof p !== "number") ? page = 1 : page = p);
+        var url = api_urls['misc_popular'].format(urlprefix, exports.apikey, page);
+        exports.fetchexternal({url: url}, callback);
     },
-    toprated: function(p, callback) {
-        opts = {type: 'movie', query: 'top-rated'};
-        opts["page"] = p || 1;
-        exports.fetchexternal(simpleUrl(opts), callback);
+    top_rated: function(p, callback) {
+        var page = ((typeof p !== "number") ? page = 1 : page = p);
+        var url = api_urls['misc_top_rated'].format(urlprefix, exports.apikey, page);
+        exports.fetchexternal({url: url}, callback);
     }
 };
 
@@ -78,64 +78,64 @@ this.Misc = {
  **/
 this.Configuration =
     function(callback) {
-        opts = {type: 'configuration', query: ''};
-        exports.fetchexternal(simpleUrl(opts), callback);
+        var url = api_urls['configuration'].format(urlprefix, exports.apikey);
+        exports.fetchexternal({url: url}, callback);
     };
 
 /**
  * Movie methods
- * q = {query: id} - id can be either tmdb id or imdb id (tt**)
+ * q = id (can be either tmdb id or imdb id)
  **/
 this.Movie = {
     info: function(q, callback) {
-        opts = {type: 'movie', symbol: '?'};
-        exports.fetchexternal(buildUrl(q,opts), callback);
+        var url = api_urls['movie_info'].format(urlprefix, q, exports.apikey);
+        exports.fetchexternal({url:url}, callback);
     },
     alternative_titles: function(q, callback) {
-        opts = {type: 'movie', details: 'alternative_titles', symbol: '?'};
-        exports.fetchexternal(buildUrl(q,opts), callback);       
+        var url = api_urls['movie_alternative_titles'].format(urlprefix, q, exports.apikey);
+        exports.fetchexternal({url:url}, callback);
     },
     casts: function(q, callback) {
-        opts = {type: 'movie', details: 'casts', symbol: '?'};
-        exports.fetchexternal(buildUrl(q,opts), callback);       
+        var url = api_urls['movie_casts'].format(urlprefix, q, exports.apikey);
+        exports.fetchexternal({url:url}, callback);
     },
     images: function(q, callback) {
-        opts = {type: 'movie', details: 'images', symbol: '?'};
-        exports.fetchexternal(buildUrl(q,opts), callback);       
+        var url = api_urls['movie_images'].format(urlprefix, q, exports.apikey);
+        exports.fetchexternal({url:url}, callback);
     },
     keywords: function(q, callback) {
-        opts = {type: 'movie', details: 'keywords', symbol: '?'};
-        exports.fetchexternal(buildUrl(q,opts), callback);       
+        var url = api_urls['movie_keywords'].format(urlprefix, q, exports.apikey);
+        exports.fetchexternal({url:url}, callback);
     },
     releases: function(q, callback) {
-        opts = {type: 'movie', details: 'releases', symbol: '?'};
-        exports.fetchexternal(buildUrl(q,opts), callback);       
+        var url = api_urls['movie_releases'].format(urlprefix, q, exports.apikey);
+        exports.fetchexternal({url:url}, callback);
     },
     trailers: function(q, callback) {
-        opts = {type: 'movie', details: 'trailers', symbol: '?'};
-        exports.fetchexternal(buildUrl(q,opts), callback);       
+        var url = api_urls['movie_trailers'].format(urlprefix, q, exports.apikey);
+        exports.fetchexternal({url:url}, callback);
     },
     translations: function(q, callback) {
-        opts = {type: 'movie', details: 'translations', symbol: '?'};
-        exports.fetchexternal(buildUrl(q,opts), callback);       
+        var url = api_urls['movie_translations'].format(urlprefix, q, exports.apikey);
+        exports.fetchexternal({url:url}, callback);
     },
 };
 
 /**
  * Search methods
  * q = {query: searchterm, page: page}
- * page defaults to 1 if not specified
+ * page defaults to 1 if not specified or invalid
  **/
 this.Search = {
     movie: function(q, callback) {
-        page = q.page || 1;
-        opts = {type: 'search', details: 'movie', page: page};
-        exports.fetchexternal(buildUrl(q,opts), callback);
+        var page = ((typeof q.page !== "number") ? page = 1 : page = q.page);
+        var url = api_urls['search_movie'].format(urlprefix, q.query, exports.apikey, page);
+        exports.fetchexternal({url:url}, callback);
     },
     person: function(q, callback) {
-        page = q.page || 1;
-        opts = {type: 'search', details: 'person', page: page};
-        exports.fetchexternal(buildUrl(q,opts), callback);
+        var page = ((typeof q.page !== "number") ? page = 1 : page = q.page);
+        var url = api_urls['search_person'].format(urlprefix, q.query, exports.apikey, page);
+        exports.fetchexternal({url:url}, callback);
     }
 };
 
@@ -145,16 +145,16 @@ this.Search = {
  **/
 this.Person = {
     info: function(q, callback) {
-        opts = {type: 'person', symbol: '?'};
-        exports.fetchexternal(buildUrl(q,opts), callback);
+        var url = api_urls['person_info'].format(urlprefix, q, exports.apikey);
+        exports.fetchexternal({url:url}, callback);
     },
     credits: function(q, callback) {
-        opts = {type: 'person', details: 'credits', symbol: '?'};
-        exports.fetchexternal(buildUrl(q,opts), callback);       
+        var url = api_urls['person_credits'].format(urlprefix, q, exports.apikey);
+        exports.fetchexternal({url:url}, callback);       
     },
     images: function(q, callback) {
-        opts = {type: 'person', details: 'images', symbol: '?'};
-        exports.fetchexternal(buildUrl(q,opts), callback);       
+        var url = api_urls['person_images'].format(urlprefix, q, exports.apikey);
+        exports.fetchexternal({url:url}, callback);       
     }
 };
 
@@ -164,13 +164,13 @@ this.Person = {
  **/
 this.Collection = {
     info: function(q, callback) {
-        opts = {type: 'collection', symbol: '?'};
-        exports.fetchexternal(buildUrl(q,opts), callback);
+        var url = api_urls['collection_info'].format(urlprefix, q, exports.apikey);
+        exports.fetchexternal({url: url}, callback);
     }
 };
 
 this.fetchexternal = function(url,callback) {
-    //console.log('Looking up url: '+url.url+'.');
+    console.log('Looking up url: '+url.url+'.');
     request({uri:encodeURI(url.url), headers:{"Accept": 'application/json'}}, function(error,response,body) {
         exports.handle(url,error,response,body,callback);
     });
