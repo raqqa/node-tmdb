@@ -11,7 +11,7 @@ String.prototype.format = function() {
 
 var api_urls =
     {
-        base:'http://api.themoviedb.org/3',
+        base: 'http://api.themoviedb.org/3',
         configuration: '{0}/configuration?api_key={1}',
         misc_latest: '{0}/latest/movie?api_key={1}',
         misc_now_playing: '{0}/movie/now-playing?api_key={1}&page={2}',
@@ -33,24 +33,24 @@ var api_urls =
         search_person: '{0}/search/person?query={1}&api_key={2}&page={3}'
     };
 
-this.init = function(apikey) {
+var apikey;
+var config;
+
+module.exports.init = function(apikey) {
     this.apikey = apikey;
     this.config = null;
     return this;
 }
 
-this.read_config = function(res) {
+module.exports.read_config = function(res) {
     this.config = res;
 }
-
-this.apikey;
-this.config;
 
 /**
  * misc. functions
  * all but the 'latest'-function has to be supplied with a page argument (can be null)
  **/
-this.Misc = {
+module.exports.Misc = {
     latest: function(callback) {
         var url = api_urls['misc_latest'].format(api_urls['base'], exports.apikey);
         exports.fetchexternal({url: url}, callback);
@@ -75,7 +75,7 @@ this.Misc = {
 /**
  * Get current configuration for constructing complete image urls
  **/
-this.Configuration =
+module.exports.Configuration =
     function(callback) {
         var url = api_urls['configuration'].format(api_urls['base'], exports.apikey);
         exports.fetchexternal({url: url}, callback);
@@ -85,7 +85,7 @@ this.Configuration =
  * Movie methods
  * q = id (can be either tmdb id or imdb id)
  **/
-this.Movie = {
+module.exports.Movie = {
     info: function(q, callback) {
         var url = api_urls['movie_info'].format(api_urls['base'], q, exports.apikey);
         exports.fetchexternal({url:url}, callback);
@@ -125,7 +125,7 @@ this.Movie = {
  * q = {query: searchterm, page: page}
  * page defaults to 1 if not specified or invalid
  **/
-this.Search = {
+module.exports.Search = {
     movie: function(q, callback) {
         var page = ((typeof q.page !== "number") ? page = 1 : page = q.page);
         var url = api_urls['search_movie'].format(api_urls['base'], q.query, exports.apikey, page);
@@ -143,7 +143,7 @@ this.Search = {
  * Person methods
  * q = {query: id}
  **/
-this.Person = {
+module.exports.Person = {
     info: function(q, callback) {
         var url = api_urls['person_info'].format(api_urls['base'], q, exports.apikey);
         exports.fetchexternal({url:url}, callback);
@@ -162,14 +162,14 @@ this.Person = {
  * Collection methods
  * q = {query: id}
  **/
-this.Collection = {
+module.exports.Collection = {
     info: function(q, callback) {
         var url = api_urls['collection_info'].format(api_urls['base'], q, exports.apikey);
         exports.fetchexternal({url: url}, callback);
     }
 };
 
-exports.fetchexternal = function(url,callback) {
+module.exports.fetchexternal = function(url,callback) {
     request(
         {
             uri:encodeURI(url.url),
@@ -181,7 +181,7 @@ exports.fetchexternal = function(url,callback) {
     );
 }
 
-exports.handle = function(url, error, response, body, callback) {
+module.exports.handle = function(url, error, response, body, callback) {
     var res = null;
     try {
         res = JSON.parse(body);
