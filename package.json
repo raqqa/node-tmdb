@@ -6,8 +6,8 @@
     "dependencies": {
         "request": "2.9.x",
     },
-	"devDependencies": {
-		"should": "*",
-		"mocha": "1.x.x",	
-	},
+    "devDependencies": {
+	"should": "*",
+	"mocha": "1.x.x",	
+    },
 }
