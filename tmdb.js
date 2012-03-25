@@ -9,193 +9,241 @@ String.prototype.format = function() {
     return content;
 };
 
-module.exports.init = function(apikey) {
-    this.apikey = apikey;
-    this.config = null;
-    return this;
-}
+var me;
+var tmdb = function(api_key) {
+	me = this;
+	this.api_key = api_key;
+	this.config = null;
+	this.base = 'http://api.themoviedb.org/3';  
+	this.api_urls =
+		{
+			configuration:              this.base+'/configuration?api_key='+this.api_key,
+			misc_latest:                this.base+'/latest/movie?api_key='+this.api_key,
+			misc_now_playing:           this.base+'/movie/now-playing?page={0}&api_key='+this.api_key,
+			misc_popular:               this.base+'/movie/popular?page={0}&api_key='+this.api_key,
+			misc_top_rated:             this.base+'/movie/top-rated?page={0}&api_key='+this.api_key,
+			movie_info:                 this.base+'/movie/{0}?api_key='+this.api_key,
+			movie_alternative_titles:   this.base+'/movie/{0}/alternative_titles?api_key='+this.api_key,
+			movie_casts:                this.base+'/movie/{0}/casts?api_key='+this.api_key,
+			movie_images:               this.base+'/movie/{0}/images?api_key='+this.api_key,
+			movie_keywords:             this.base+'/movie/{0}/keywords?api_key='+this.api_key,
+			movie_releases:             this.base+'/movie/{0}/releases?api_key='+this.api_key,
+			movie_trailers:             this.base+'/movie/{0}/trailers?api_key='+this.api_key,
+			movie_translations:         this.base+'/movie/{0}/translations?api_key='+this.api_key,
+			person_info:                this.base+'/person/{0}?api_key='+this.api_key,
+			person_credits:             this.base+'/person/{0}/credits?api_key='+this.api_key,
+			person_images:              this.base+'/person/{0}/images?api_key='+this.api_key,
+			collection_info:            this.base+'/collection/{0}?api_key='+this.api_key,
+			search_movie:               this.base+'/search/movie?query={0}&page={1}&api_key='+this.api_key,
+			search_person:              this.base+'/search/person?query={0}&page={1}&api_key='+this.api_key,
+		};
 
-var apikey;
-var config;
-
-var base = 'http://api.themoviedb.org/3'; 
-var api_urls =
-    {
-        configuration:              base+'/configuration?api_key={0}',
-        misc_latest:                base+'/latest/movie?api_key={0}',
-        misc_now_playing:           base+'/movie/now-playing?api_key={0}&page={1}',
-        misc_popular:               base+'/movie/popular?api_key={0}&page={1}',
-        misc_top_rated:             base+'/movie/top-rated?api_key={0}&page={1}',
-        movie_info:                 base+'/movie/{0}?api_key={1}',
-        movie_alternative_titles:   base+'/movie/{0}/alternative_titles?api_key={1}',
-        movie_casts:                base+'/movie/{0}/casts?api_key={1}',
-        movie_images:               base+'/movie/{0}/images?api_key={1}',
-        movie_keywords:             base+'/movie/{0}/keywords?api_key={1}',
-        movie_releases:             base+'/movie/{0}/releases?api_key={1}',
-        movie_trailers:             base+'/movie/{0}/trailers?api_key={1}',
-        movie_translations:         base+'/movie/{0}/translations?api_key={1}',
-        person_info:                base+'/person/{0}?api_key={1}',
-        person_credits:             base+'/person/{0}/credits?api_key={1}',
-        person_images:              base+'/person/{0}/images?api_key={1}',
-        collection_info:            base+'/collection/{0}?api_key={1}',
-        search_movie:               base+'/search/movie?query={0}&api_key={1}&page={2}',
-        search_person:              base+'/search/person?query={0}&api_key={1}&page={2}'
-    };
-
-
-module.exports.read_config = function(res) {
-    this.config = res;
-}
+	this.configuration(function(err,res) {
+		if(!err) {
+			me.config = res;
+		} else {
+			console.error('Error loading configuration: '+err);
+		}
+	});
+};
 
 /**
- * misc. functions
- * all but the 'latest'-function has to be supplied with a page argument (can be null)
+ * factory function
  **/
-module.exports.Misc = {
-    latest: function(callback) {
-        var url = api_urls['misc_latest'].format(exports.apikey);
-        exports.fetchexternal({url: url}, callback);
-    },
-    now_playing: function(p, callback) {
-        var page = ((typeof p !== "number") ? page = 1 : page = p);
-        var url = api_urls['misc_now_playing'].format(exports.apikey, page);
-        exports.fetchexternal({url: url}, callback);
-    },
-    popular: function(p, callback) {
-        var page = ((typeof p !== "number") ? page = 1 : page = p);
-        var url = api_urls['misc_popular'].format(exports.apikey, page);
-        exports.fetchexternal({url: url}, callback);
-    },
-    top_rated: function(p, callback) {
-        var page = ((typeof p !== "number") ? page = 1 : page = p);
-        var url = api_urls['misc_top_rated'].format(exports.apikey, page);
-        exports.fetchexternal({url: url}, callback);
-    }
+module.exports.init = function(apikey) {
+	return new tmdb(apikey);
+};
+
+/**
+ * misc methods
+ * all but the 'latest'-function can be supplied with a page argument,
+ * if page is left out the first page is returned
+ **/
+tmdb.prototype.misc = {
+	latest: function(callback) {
+		var url = me.api_urls['misc_latest'];
+		executeQuery({url: url}, callback);
+	},
+	nowPlaying: function(p, callback) {
+		if(arguments.length === 1) {
+			callback = p;
+			var page = 1;
+		} else {
+			var page = ((typeof p !== 'number') ? page = 1 : page = p);
+		}
+		var url = me.api_urls['misc_now_playing'].format(page);
+		executeQuery({url: url}, callback);
+	},
+	popular: function(p, callback) {
+		if(arguments.length === 1) {
+			callback = p;
+			var page = 1;
+		} else {
+			var page = ((typeof p !== 'number') ? page = 1 : page = p);
+		}
+		var url = me.api_urls['misc_popular'].format(page);
+		executeQuery({url: url}, callback);
+	},
+	topRated: function(p, callback) {
+		if(arguments.length === 1) {
+			callback = p;
+			var page = 1;
+		} else {
+			var page = ((typeof p !== 'number') ? page = 1 : page = p);
+		}
+		var url = me.api_urls['misc_top_rated'].format(page);
+		executeQuery({url: url}, callback);
+	},
 };
 
 /**
  * Get current configuration for constructing complete image urls
  **/
-module.exports.Configuration =
-    function(callback) {
-        var url = api_urls['configuration'].format(exports.apikey);
-        exports.fetchexternal({url: url}, callback);
-    };
+tmdb.prototype.configuration = function(callback) {
+	var url = me.api_urls['configuration'];
+	executeQuery({url: url}, callback);
+};
 
 /**
- * Movie methods
+ * movie methods
  * q = id (can be either tmdb id or imdb id)
  **/
-module.exports.Movie = {
+tmdb.prototype.movie = {
     info: function(q, callback) {
-        var url = api_urls['movie_info'].format(q, exports.apikey);
-        exports.fetchexternal({url:url}, callback);
+        var url = me.api_urls['movie_info'].format(q);
+        executeQuery({url:url}, callback);
     },
-    alternative_titles: function(q, callback) {
-        var url = api_urls['movie_alternative_titles'].format(q, exports.apikey);
-        exports.fetchexternal({url:url}, callback);
+    alternativeTitles: function(q, callback) {
+        var url = me.api_urls['movie_alternative_titles'].format(q);
+        executeQuery({url:url}, callback);
     },
     casts: function(q, callback) {
-        var url = api_urls['movie_casts'].format(q, exports.apikey);
-        exports.fetchexternal({url:url}, callback);
+        var url = me.api_urls['movie_casts'].format(q);
+        executeQuery({url:url}, callback);
     },
     images: function(q, callback) {
-        var url = api_urls['movie_images'].format(q, exports.apikey);
-        exports.fetchexternal({url:url}, callback);
+        var url = me.api_urls['movie_images'].format(q);
+        executeQuery({url:url}, callback);
     },
     keywords: function(q, callback) {
-        var url = api_urls['movie_keywords'].format(q, exports.apikey);
-        exports.fetchexternal({url:url}, callback);
+        var url = me.api_urls['movie_keywords'].format(q);
+        executeQuery({url:url}, callback);
     },
     releases: function(q, callback) {
-        var url = api_urls['movie_releases'].format(q, exports.apikey);
-        exports.fetchexternal({url:url}, callback);
+        var url = me.api_urls['movie_releases'].format(q);
+        executeQuery({url:url}, callback);
     },
     trailers: function(q, callback) {
-        var url = api_urls['movie_trailers'].format(q, exports.apikey);
-        exports.fetchexternal({url:url}, callback);
+        var url = me.api_urls['movie_trailers'].format(q);
+        executeQuery({url:url}, callback);
     },
     translations: function(q, callback) {
-        var url = api_urls['movie_translations'].format(q, exports.apikey);
-        exports.fetchexternal({url:url}, callback);
+        var url = me.api_urls['movie_translations'].format(q);
+        executeQuery({url:url}, callback);
     },
 };
 
 /**
- * Search methods
- * q = {query: searchterm, page: page}
+ * search methods
+ * q = searchterm, p = page
  * page defaults to 1 if not specified or invalid
  **/
-module.exports.Search = {
-    movie: function(q, callback) {
-        var page = ((typeof q.page !== "number") ? page = 1 : page = q.page);
-        var url = api_urls['search_movie'].format(q.query, exports.apikey, page);
-        console.log(url);
-        exports.fetchexternal({url:url}, callback);
+tmdb.prototype.search = {
+    movie: function(q, p, callback) {
+		if(arguments.length === 2) {
+			callback = p;
+			p = 1;
+		} else {
+			if (typeof p !== 'number') { p = 1; }
+		}
+        var url = me.api_urls['search_movie'].format(q, p);
+        executeQuery({url:url}, callback);
     },
-    person: function(q, callback) {
-        var page = ((typeof q.page !== "number") ? page = 1 : page = q.page);
-        var url = api_urls['search_person'].format(q.query, exports.apikey, page);
-        exports.fetchexternal({url:url}, callback);
-    }
+    person: function(q, p, callback) {
+		if(arguments.length === 2) {
+			callback = p;
+			p = 1;
+		} else {
+			if (typeof p !== 'number') { p = 1; }
+		}
+        var url = me.api_urls['search_person'].format(q, p);
+        executeQuery({url:url}, callback);
+	},
 };
 
 /**
- * Person methods
- * q = {query: id}
+ * person methods
+ * id = person id
  **/
-module.exports.Person = {
-    info: function(q, callback) {
-        var url = api_urls['person_info'].format(q, exports.apikey);
-        exports.fetchexternal({url:url}, callback);
+tmdb.prototype.person = {
+    info: function(id, callback) {
+        var url = me.api_urls['person_info'].format(id);
+        executeQuery({url:url}, callback);
     },
-    credits: function(q, callback) {
-        var url = api_urls['person_credits'].format(q, exports.apikey);
-        exports.fetchexternal({url:url}, callback);       
+    credits: function(id, callback) {
+        var url = me.api_urls['person_credits'].format(id);
+        executeQuery({url:url}, callback);       
     },
-    images: function(q, callback) {
-        var url = api_urls['person_images'].format(q, exports.apikey);
-        exports.fetchexternal({url:url}, callback);       
-    }
+    images: function(id, callback) {
+        var url = me.api_urls['person_images'].format(id);
+        executeQuery({url:url}, callback);       
+    },
 };
 
 /**
- * Collection methods
- * q = {query: id}
+ * collection methods
+ * id = collection id
  **/
-module.exports.Collection = {
-    info: function(q, callback) {
-        var url = api_urls['collection_info'].format(q, exports.apikey);
-        exports.fetchexternal({url: url}, callback);
-    }
+tmdb.prototype.collection = {
+    info: function(id, callback) {
+        var url = me.api_urls['collection_info'].format(id, exports.apikey);
+        executeQuery({url: url}, callback);
+    },
 };
 
-module.exports.fetchexternal = function(url,callback) {
+/**
+ * Sends the query to tmdb and ships the response of to be processed
+ **/
+var executeQuery = function(url,callback) {
     request(
         {
             uri:encodeURI(url.url),
             headers: {"Accept": 'application/json'}
         },
         function(err,res,body) {
-            exports.handle(url,err,res,body,callback);
+            processQuery(url,err,res,body,callback);
         }
     );
 }
 
-module.exports.handle = function(url, error, response, body, callback) {
+/**
+ * Processes the response from tmdb
+ **/
+var processQuery = function(url, error, response, body, callback) {
     var res = null;
     try {
         res = JSON.parse(body);
     } catch(e) {
-        console.error('Error parsing body. Body was:');
-        console.error(body);
-        error = 'Error parsing body.';
     }
 
-    if(!error && response.statusCode == 200 && !res.status_code) {
+    if(!error && response.statusCode === 200 && !res.status_code) {
         callback(undefined,res);
         return;
     }
 
-    callback(error,res);
+	if(res.status_code) {
+		switch(res.status_code) {
+			case 6: // Invalid id
+				callback(res,undefined);
+				break;
+			case 7: // Invalid API key
+				callback(res,undefined);
+				break;
+			case 10: // API key suspended, not good
+				callback(res,undefined);
+				break;
+		}
+	} else {
+		callback(error,res);
+	}
 }
