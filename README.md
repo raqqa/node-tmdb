@@ -17,7 +17,7 @@ tmdb.misc.latest(function(err,res) {
 	console.log(res.title);
 });
 
-tmdb.movie.info(5, functioN(err,res) {
+tmdb.movie.info(5, function(err,res) {
 	console.log(res.title);	
 });
 
