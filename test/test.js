@@ -1,7 +1,7 @@
 var fs = require('fs');
 var should = require('should');
 var key = new String(fs.readFileSync('APIKEY')).replace(/(\r\n|\n|\r)/gm,"");
-var tmdb = require('../tmdb').init(key);
+var tmdb = require('../lib/tmdb').init(key);
 
 describe("General methods", function() {
 	it("can get configuration info", function(done) {
@@ -12,7 +12,6 @@ describe("General methods", function() {
 	});
 });
 
-/*
 describe("Person methods", function() {
 	it("fetches info on a person", function(done){
 		tmdb.person.info(109, function(err,res) {
@@ -59,9 +58,9 @@ describe("Search methods", function() {
 
 
 describe("Collection methods", function() {
-	it("can get info on collections"; function(done) {
-		tmdb.collections.info(10, function(err,res) {
-			res.id.should.be(10);	
+	it("can get info on collections", function(done) {
+		tmdb.collection.info(10, function(err,res) {
+			res.name.should.equal('Star Wars Collection');	
 			done();
 		});
 	});
@@ -78,6 +77,7 @@ describe("Movie methods", function() {
 	it("can get alternative titles for a movie", function(done) {
 		tmdb.movie.alternativeTitles(11, function(err,res) {
 			res.id.should.equal(11);
+			done();
 		});
 	});
 	
@@ -124,7 +124,6 @@ describe("Movie methods", function() {
 		});
 	});
 });
-*/
 
 describe("Misc methods", function() {
 	it("can get the latest added movie", function(done) {
