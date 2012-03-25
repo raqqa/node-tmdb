@@ -28,7 +28,7 @@ tmdb.person.info(109, function(err,res) {
 ```
 etc.
 
-All except auth methods for contributing to TMDb as of now are implemented.
+All except auth methods for contributing to TMDb are implemented.
 
 Testing is done by mocha.
 
