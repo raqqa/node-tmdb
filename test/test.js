@@ -74,6 +74,13 @@ describe("Movie methods", function() {
 		});
 	});
 
+	it("can get data with an imdb-id", function(done) {
+		tmdb.movie.info('tt0076759', function(err,res) {
+			res.title.should.equal('Star Wars: Episode IV - A New Hope');
+			done();
+		});
+	});
+
 	it("can get alternative titles for a movie", function(done) {
 		tmdb.movie.alternativeTitles(11, function(err,res) {
 			res.id.should.equal(11);
