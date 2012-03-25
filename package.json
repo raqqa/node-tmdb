@@ -10,5 +10,4 @@
 		"should": "*",
 		"mocha": "1.x.x",	
 	},
-    "main": "./server.coffee"
 }
