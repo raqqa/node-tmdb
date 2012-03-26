@@ -13,21 +13,21 @@ describe("General methods", function() {
 });
 
 describe("Person methods", function() {
-	it("fetches info on a person", function(done){
+	it("can fetch info on a person", function(done){
 		tmdb.person.info(109, function(err,res) {
 			res.name.should.equal("Elijah Wood");
 			done();
 		});			
 	});
 
-	it("fetches a person's credits", function(done) {
+	it("can fetch a person's credits", function(done) {
 		tmdb.person.credits(109, function(err,res) {
 			res.id.should.equal(109);
 			done();
 		});
 	});
 
-	it("fetches a person's images", function(done) {
+	it("can fetch a person's images", function(done) {
 		tmdb.person.images(109, function(err,res) {
 			res.id.should.equal(109);
 			done();
@@ -36,7 +36,7 @@ describe("Person methods", function() {
 });
 
 describe("Search methods", function() {
-	it("searches for movies", function(done) {
+	it("can search for movies", function(done) {
 		tmdb.search.movie('transformers', function(err,res) {
 			res.page.should.equal(1);
 			done();
@@ -48,7 +48,7 @@ describe("Search methods", function() {
 			done();
 		});
 	});
-	it("searches for persons", function(done) {
+	it("can search for persons", function(done) {
 		tmdb.search.person('mikael', function(err,res) {
 			res.page.should.equal(1);
 			done();
