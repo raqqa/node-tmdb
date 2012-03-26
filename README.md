@@ -11,7 +11,7 @@
 ### Usage
 
 ```
-var tmdb = require('./lib/tmdb.js').init(key);
+var tmdb = require('./tmdb').init(key);
 
 tmdb.misc.latest(function(err,res) {
 	console.log(res.title);
@@ -35,8 +35,6 @@ Testing is done by mocha.
 See [http://help.themoviedb.org/kb/api/about-3] (TMDb v3 page about the api)
 
 ### Other
-
-New to node.js and javascript in general, gladly accepting of any criticism.
 
 For v2.1 api, go to [kkarikos repo] (https://raw.github.com/kkarikos/tmdb).
 
