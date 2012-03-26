@@ -36,6 +36,6 @@ See [http://help.themoviedb.org/kb/api/about-3] (TMDb v3 page about the api)
 
 ### Other
 
-For v2.1 api, go to [kkarikos repo] (https://raw.github.com/kkarikos/tmdb).
+For TMDb's old v2.1 api, go to [kkarikos repo] (https://raw.github.com/kkarikos/tmdb).
 
 kkariko: I used part of your request code here, contact me if you have questions, I can't find a way to contact you.
