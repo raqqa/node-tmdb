@@ -4,3 +4,5 @@ APIKEY
 *~
 node_modules/
 node_modules
+./test.js
+./test2.js
