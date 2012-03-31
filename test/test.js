@@ -56,6 +56,20 @@ describe("Search methods", function() {
 	});
 });
 
+describe("Company methods", function() {
+	it("can get info on a company", function(done) {
+		tmdb.company.info(1, function(err,res) {
+			res.name.should.equal('Lucasfilm');	
+			done();
+		});
+	});
+	it("can fetch what movies a company has produced", function(done) {
+		tmdb.company.movies(1, function(err,res) {
+			res.id.should.equal(1);	
+			done();
+		});
+	});
+});
 
 describe("Collection methods", function() {
 	it("can get info on collections", function(done) {
