@@ -28,7 +28,7 @@ tmdb.person.info(109, function(err,res) {
 ```
 etc.
 
-All methods live right now (2012-03-26) implemented.
+All methods live right now (2012-03-31) implemented.
 
 Testing is done by mocha.
 
