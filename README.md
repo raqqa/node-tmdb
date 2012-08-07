@@ -32,7 +32,7 @@ All methods live right now (2012-08-08) implemented.
 
 Testing is done by mocha.
 
-See [http://help.themoviedb.org/kb/api/about-3] (TMDb v3 page about the api)
+See [TMDb v3 page about the api](http://help.themoviedb.org/kb/api/about-3)
 
 ### TO DO
 
