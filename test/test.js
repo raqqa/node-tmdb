@@ -1,6 +1,6 @@
 var fs = require('fs');
 var should = require('should');
-var key = new String(fs.readFileSync('APIKEY')).replace(/(\r\n|\n|\r)/gm,"");
+var key = new String(fs.readFileSync(__dirname + '/APIKEY')).replace(/(\r\n|\n|\r)/gm,"");
 var tmdb = require('../lib/tmdb').init(key);
 
 describe("General methods", function() {
