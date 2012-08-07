@@ -34,6 +34,10 @@ Testing is done by mocha.
 
 See [http://help.themoviedb.org/kb/api/about-3] (TMDb v3 page about the api)
 
+### TO DO
+
+No language support because I don't use it personally, can be added on request or better yeg: add it yourself and make  a pull request. :)
+
 ### Other
 
 For TMDb's old v2.1 api, go to [kkarikos repo] (https://raw.github.com/kkarikos/tmdb).
