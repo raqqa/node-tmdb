@@ -16,6 +16,8 @@ Install from NPM with:
 npm install tmdbv3
 ```
 
+Then,
+
 ```
 var tmdb = require('tmdbv3').init(key);
 
