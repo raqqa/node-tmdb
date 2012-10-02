@@ -2,7 +2,11 @@
     "name": "tmdbv3",
     "version": "0.1.1",
     "description": "Implementation of TMDb's v3 API",
+    "keywords": ["tmdb","moviedb","movies"],
+    "homepage": "https://github.com/raqqa/node-tmdb",
+    "bugs": {"url": "https://github.com/raqqa/node-tmdb/issues"},
     "author": "Mikael Emilsson <mikael.emilsson@gmail.com>",
+    "engines": { "node": ">=0.4.0" },
     "dependencies": {
         "request": "2.9.x"
     },
