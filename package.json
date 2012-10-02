@@ -1,13 +1,15 @@
 {
-    "name": "node-tmdb",
-    "version": "0.1.0",
+    "name": "tmdbv3",
+    "version": "0.1.1",
     "description": "Implementation of TMDb's v3 API",
     "author": "Mikael Emilsson <mikael.emilsson@gmail.com>",
     "dependencies": {
         "request": "2.9.x"
     },
-	"devDependencies": {
-		"should": "*",
-		"mocha": "1.x.x"
-	}
+    "devDependencies": {
+        "should": "*",
+        "mocha": "1.x.x"
+    },
+    "main": "./lib/tmdb",
+    "repository": { "type": "git", "url": "git://github.com/raqqa/node-tmdb.git" }
 }
