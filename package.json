@@ -1,6 +1,6 @@
 {
     "name": "tmdbv3",
-    "version": "0.1.1",
+    "version": "0.1.2",
     "description": "Implementation of TMDb's v3 API",
     "keywords": ["tmdb","moviedb","movies"],
     "homepage": "https://github.com/raqqa/node-tmdb",
