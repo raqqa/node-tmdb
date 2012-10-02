@@ -10,11 +10,13 @@
 
 ### Usage
 
-```
 Install from NPM with:
 
+```
 npm install tmdbv3
+```
 
+```
 var tmdb = require('tmdbv3').init(key);
 
 tmdb.misc.latest(function(err,res) {
