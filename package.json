@@ -1,5 +1,6 @@
 {
     "name": "node-tmdb",
+    "main": "lib/tmdb.js",
     "version": "0.1.0",
     "description": "Implementation of TMDb's v3 API",
     "author": "Mikael Emilsson <mikael.emilsson@gmail.com>",
