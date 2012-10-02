@@ -11,7 +11,11 @@
 ### Usage
 
 ```
-var tmdb = require('./tmdb').init(key);
+Install from NPM with:
+
+npm install tmdbv3
+
+var tmdb = require('tmdbv3').init(key);
 
 tmdb.misc.latest(function(err,res) {
 	console.log(res.title);
