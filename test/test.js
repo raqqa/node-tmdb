@@ -88,11 +88,29 @@ describe("Movie methods", function() {
 		});
 	});
 
+	it("can get info on a movie, in french", function(done) {
+		tmdb.setLanguage('fr');
+		tmdb.movie.info(11, function(err,res) {
+			res.title.should.equal('Star Wars : Épisode IV - Un nouvel espoir');
+			done();
+		});
+		tmdb.resetLanguage();
+	});
+	
 	it("can get data with an imdb-id", function(done) {
 		tmdb.movie.info('tt0076759', function(err,res) {
 			res.title.should.equal('Star Wars: Episode IV - A New Hope');
 			done();
 		});
+	});
+	
+	it("can get data with an imdb-id, in french", function(done) {
+		tmdb.setLanguage('fr');
+		tmdb.movie.info('tt0076759', function(err,res) {
+			res.title.should.equal('Star Wars : Épisode IV - Un nouvel espoir');
+			done();
+		});
+		tmdb.resetLanguage();
 	});
 
 	it("can get alternative titles for a movie", function(done) {
