@@ -40,7 +40,7 @@ All methods live right now (2012-08-08) implemented.
 
 Testing is done by mocha.
 
-See [TMDb v3 page about the api](http://help.themoviedb.org/kb/api/about-3)
+See [the TMDb page about the API](https://www.themoviedb.org/documentation/api) or [view the full API](http://docs.themoviedb.apiary.io/)
 
 ### TO DO
 
