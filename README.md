@@ -33,6 +33,11 @@ tmdb.person.info(109, function(err,res) {
 	console.log(res.name);	
 });
 
+// setting french as default language...
+tmdb.setLanguage('fr');
+// and resetting to english.
+tmdb.resetLanguage();
+
 ```
 etc.
 
@@ -41,10 +46,6 @@ All methods live right now (2012-08-08) implemented.
 Testing is done by mocha.
 
 See [TMDb v3 page about the api](http://help.themoviedb.org/kb/api/about-3)
-
-### TO DO
-
-No language support because I don't use it personally, can be added on request or better yet: add it yourself and make  a pull request. :)
 
 ### Other
 
