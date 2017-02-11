@@ -1,35 +1,21 @@
-### Dependencies
-
-[request] (https://github.com/mikeal/request)
-
-##### Optional for testing
-
-[mocha] (https://github.com/visionmedia/mocha) 
-
-[should] (https://github.com/visionmedia/should.js)
+### Installation
+```
+npm install --save tmdbv3
+```
 
 ### Usage
+```js
+const tmdb = require('tmdbv3').init(key);
 
-Install from NPM with:
-
-```
-npm install tmdbv3
-```
-
-Then,
-
-```
-var tmdb = require('tmdbv3').init(key);
-
-tmdb.misc.latest(function(err,res) {
+tmdb.misc.latest((err ,res) => {
 	console.log(res.title);
 });
 
-tmdb.movie.info(5, function(err,res) {
+tmdb.movie.info(5, (err ,res) => {
 	console.log(res.title);	
 });
 
-tmdb.person.info(109, function(err,res) {
+tmdb.person.info(109, (err ,res) => {
 	console.log(res.name);	
 });
 
@@ -37,7 +23,6 @@ tmdb.person.info(109, function(err,res) {
 tmdb.setLanguage('fr');
 // and resetting to english.
 tmdb.resetLanguage();
-
 ```
 etc.
 
